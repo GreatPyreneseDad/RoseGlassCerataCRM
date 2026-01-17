@@ -1,0 +1,161 @@
+# Example Custom Lens Calibration
+# Copy and modify this file to create industry-specific lenses
+
+name: custom_example
+description: Example lens calibration for demonstration purposes
+
+# Rose Glass dimension weights (must sum to 1.0 after normalization)
+weights:
+  psi_intent: 0.25      # Intent coherence - need/solution match
+  rho_authority: 0.30   # Decision authority - budget and power
+  q_urgency: 0.25       # Urgency/activation - timeline pressure
+  f_fit: 0.20           # Fit/belonging - ICP alignment
+
+# Qualification thresholds
+authority_threshold: 0.5  # Minimum ρ for hot tier consideration
+
+# Biological optimization parameters (usually don't need to change)
+biological_optimization:
+  Km: 0.2  # Saturation constant
+  Ki: 0.8  # Inhibition constant
+
+# Coupling strength (authority × intent reinforcement)
+coupling_strength: 0.15
+
+# Hot tier requirements (all must be met)
+hot_tier:
+  min_coherence: 2.5
+  min_authority: 0.6
+  min_urgency: 0.3
+
+# Warm tier requirements
+warm_tier:
+  min_coherence: 1.5
+
+# Cold tier requirements
+cold_tier:
+  min_coherence: 0.5
+
+# Disqualification criteria (any triggers disqualification)
+disqualification:
+  max_coherence: 0.5
+  min_authority: 0.15
+  min_fit: 0.2
+
+# Intent signal sources and weights
+intent_signals:
+  sources:
+    inbound: 0.30
+    referral: 0.25
+    event: 0.20
+    content: 0.15
+    outbound: 0.10
+    unknown: 0.05
+
+  engagement:
+    meeting_request: 0.15
+    content_download: 0.05  # per download, capped at 0.15
+    pain_point: 0.10        # per pain point, capped at 0.30
+    use_case: 0.20
+
+# Authority signal weights
+authority_signals:
+  decision_maker: 0.35
+  budget_mentioned: 0.20
+
+  titles:
+    - ceo
+    - cto
+    - cfo
+    - coo
+    - vp
+    - director
+    - head of
+    - chief
+
+  company_sizes:
+    enterprise: 0.15
+    mid-market: 0.20
+    smb: 0.15
+    startup: 0.10
+
+# Urgency signal detection
+urgency_signals:
+  timeline:
+    immediate: 0.40
+    this_quarter: 0.30
+    next_quarter: 0.20
+    this_year: 0.10
+
+  keywords:
+    - urgent
+    - asap
+    - immediately
+    - critical
+    - deadline
+    - struggling
+    - failing
+    - breaking
+    - desperate
+    - need now
+
+# Fit/belonging signals
+fit_signals:
+  target_industries:
+    - technology
+    - saas
+    - software
+    - fintech
+    - healthcare tech
+
+  company_size_preference:
+    - mid-market
+    - enterprise
+
+  tech_stack_importance: 0.05  # per tech mentioned, capped at 0.20
+
+# Warning signal detection
+warning_signals:
+  low_authority_high_intent:
+    authority_threshold: 0.4
+    intent_threshold: 0.5
+    message: "Intent without authority - may need champion"
+
+  high_urgency_low_authority:
+    urgency_threshold: 0.7
+    authority_threshold: 0.4
+    message: "High urgency + low authority - may be researcher"
+
+  competitor_mentioned:
+    message: "Currently using competitor"
+
+  unclear_intent:
+    intent_threshold: 0.3
+    message: "Unclear intent - needs discovery"
+
+# Action recommendations by tier
+action_recommendations:
+  hot:
+    - "Schedule demo/meeting ASAP"
+    - "Confirm budget in first call"
+    - "Offer accelerated timeline"  # If q >= 0.6
+
+  warm:
+    - "Discovery call to understand needs"  # If psi < 0.5
+    - "Identify decision-maker / champion"  # If rho < 0.5
+    - "Create urgency - share ROI data"     # If q < 0.3
+    - "Add to nurture sequence"
+
+  cold:
+    - "Add to long-term nurture"
+    - "Send educational content"  # If psi < 0.3
+    - "Re-evaluate in 30 days"
+
+  disqualified:
+    - "Archive - does not meet qualification criteria"
+
+# Metadata
+created_at: "2026-01-16"
+version: "1.0"
+last_updated: "2026-01-16"
+author: "Rose Glass Framework"

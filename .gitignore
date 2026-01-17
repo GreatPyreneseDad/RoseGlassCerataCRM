@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Data directories (keep structure, ignore contents)
+data/leads/*.json
+data/graveyard/*.json
+data/graveyard/nutrients/*.json
+data/outcomes/*.json
+data/trials/*.json
+data/trials/results/*.json
+
+# Keep directory structure
+!data/leads/.gitkeep
+!data/graveyard/.gitkeep
+!data/graveyard/nutrients/.gitkeep
+!data/outcomes/.gitkeep
+!data/trials/.gitkeep
+!data/trials/results/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
