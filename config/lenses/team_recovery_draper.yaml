@@ -1,0 +1,366 @@
+# Team Recovery - Draper, Utah
+# Recovery Services Lens Calibration
+#
+# Optimized for behavioral health admissions with focus on:
+# - Crisis detection (safety-first)
+# - Readiness assessment
+# - Resource verification (insurance)
+# - Program fit
+
+name: team_recovery_draper
+description: Behavioral health admissions lens for Team Recovery, Draper UT
+version: "1.0"
+created: "2026-01-16"
+
+# Rose Glass dimension weights
+weights:
+  psi_intent: 0.25      # Readiness for change / motivation
+  rho_authority: 0.30   # Resources (insurance, family support)
+  q_urgency: 0.30       # Safety timeline (higher for crisis detection)
+  f_fit: 0.15           # Program match (substance, demographics)
+
+# Biological optimization (prevent urgency gaming)
+biological_optimization:
+  Km: 0.2
+  Ki: 0.8
+
+# Coupling strength
+coupling_strength: 0.15
+
+# CRISIS DETECTION (overrides normal tiers)
+crisis_detection:
+  urgency_threshold: 0.7        # q > 0.7 = CRISIS tier
+  keywords:
+    suicide:
+      - suicidal
+      - want to die
+      - end my life
+      - kill myself
+      - suicide plan
+    immediate_danger:
+      - overdosed
+      - overdosing
+      - can't breathe
+      - chest pain
+      - unresponsive
+      - seizing
+    severe_withdrawal:
+      - withdrawal
+      - detox needed
+      - shaking
+      - hallucinating
+      - DTs
+    safety_risk:
+      - unsafe
+      - homeless
+      - domestic violence
+      - threat
+  action: "IMMEDIATE clinical assessment - contact crisis clinician NOW"
+
+# Qualification tier thresholds
+hot_tier:
+  min_coherence: 2.5
+  min_authority: 0.4      # Has verified insurance/resources
+  min_urgency: 0.3
+  max_urgency: 0.7        # Below crisis
+
+warm_tier:
+  min_coherence: 1.5
+
+cold_tier:
+  min_coherence: 0.5
+
+# Disqualification criteria
+disqualification:
+  max_coherence: 0.5
+  min_authority: 0.15     # No resources at all
+  min_fit: 0.15           # Poor program match
+
+# Authority threshold (lower than enterprise - accept Medicaid)
+authority_threshold: 0.4
+
+# INTENT SIGNALS - Recovery Context
+intent_signals:
+  # Referral source weights
+  sources:
+    self_referral: 0.35         # Called themselves - high intent
+    family_referral: 0.30       # Family seeking help
+    therapist_referral: 0.35    # Professional referral
+    physician_referral: 0.35    # Medical provider
+    er_referral: 0.40           # Emergency department
+    court_ordered: 0.20         # External pressure (lower intent)
+    probation_referral: 0.20    # Legal mandate
+    employer_referral: 0.25     # EAP referral
+    friend_referral: 0.30       # Peer support
+    unknown: 0.05
+
+  # Engagement signals
+  engagement:
+    called_directly: 0.20           # Proactive contact
+    filled_inquiry_form: 0.15       # Web form submission
+    previous_treatment: 0.10        # Treatment history (shows pattern)
+    multiple_contacts: 0.15         # Followed up multiple times
+    family_involved: 0.15           # Support system engaged
+    brought_family_to_call: 0.20    # Very engaged
+
+  # Readiness indicators
+  readiness:
+    admits_problem: 0.20
+    wants_help: 0.25
+    expressed_desire: 0.20
+    ready_to_start: 0.25
+
+# AUTHORITY SIGNALS - Resources & Decision-Making
+authority_signals:
+  # Insurance/payment verification
+  insurance_verified: 0.40        # Coverage confirmed
+  insurance_pending: 0.20         # Inquiry sent
+  self_pay_committed: 0.35        # Has funds, willing to pay
+  family_support_financial: 0.15  # Family will pay
+
+  # Coverage types
+  coverage_types:
+    private_insurance: 0.25       # Commercial PPO/HMO
+    medicaid: 0.20                # State coverage
+    medicare: 0.20                # Federal coverage
+    tricare: 0.25                 # Military
+    self_pay: 0.15                # Out of pocket
+    scholarship_eligible: 0.10    # Financial assistance
+    uninsured: 0.05               # No coverage (may need referral)
+
+  # Decision-making capacity
+  decision_making:
+    self_decision: 0.30           # Adult, self-referred
+    family_decision: 0.20         # Family making decision
+    legal_guardian: 0.25          # Guardian involved
+    court_mandated: 0.15          # No choice
+
+  # Support system
+  support:
+    family_supportive: 0.15
+    stable_housing: 0.10
+    employment_willing_to_hold: 0.10
+
+# URGENCY SIGNALS - Safety & Timeline
+urgency_signals:
+  # Timeline mentioned
+  timeline:
+    immediate: 0.50               # "I need help now"
+    today: 0.50                   # Same day
+    this_week: 0.40               # Within 7 days
+    this_month: 0.25              # Within 30 days
+    next_month: 0.15              # 30-60 days
+    exploring: 0.10               # No specific timeline
+    court_deadline: 0.45          # Legal requirement
+
+  # Crisis keywords (see crisis_detection above)
+  # Medical urgency
+  medical:
+    - withdrawal symptoms
+    - detox needed
+    - medical complications
+    - pregnant
+    - chronic pain
+
+  # Legal pressure
+  legal:
+    - court date
+    - probation
+    - CPS involved
+    - losing custody
+    - jail alternative
+
+  # Environmental
+  environmental:
+    - homeless
+    - unsafe living
+    - domestic violence
+    - lost job
+    - about to lose
+
+# FIT SIGNALS - Program Match
+fit_signals:
+  # Substance of concern (Team Recovery specialties)
+  substances:
+    primary_substances:
+      - alcohol
+      - opioids
+      - heroin
+      - fentanyl
+      - prescription opioids
+      - stimulants
+      - methamphetamine
+      - cocaine
+      - benzodiazepines
+      - cannabis
+    polysubstance: 0.15           # Multiple substances
+
+  # Demographics
+  demographics:
+    age_18_plus: 0.20             # Adult program
+    age_appropriate: 0.15         # Fits age range
+    gender_appropriate: 0.10      # If gender-specific tracks
+
+  # Clinical capabilities
+  clinical_fit:
+    dual_diagnosis_capable: 0.20  # Co-occurring mental health
+    medication_assisted: 0.15     # MAT available
+    trauma_informed: 0.15         # Trauma history
+
+  # Geographic
+  location:
+    utah_resident: 0.15           # In-state
+    salt_lake_area: 0.15          # Local (easier family visits)
+    out_of_state: 0.10            # Still acceptable
+
+  # Special populations
+  special_populations:
+    veterans: 0.10                # Veteran-specific services
+    pregnant_postpartum: 0.10     # Maternal services
+    lgbtq: 0.10                   # LGBTQ+ affirming
+
+# WARNING SIGNALS - Clinical Concerns
+warning_signals:
+  # Not ready indicators
+  not_ready:
+    keywords:
+      - just looking
+      - not sure I have a problem
+      - family made me call
+      - court making me
+      - don't think I need
+    message: "Low readiness - may need motivational interviewing"
+
+  # Clinical concerns (may need higher level of care)
+  clinical_red_flags:
+    psychiatric_hospital_need:
+      - active psychosis
+      - severe mental health crisis
+      - danger to others
+      - violent behavior
+    message: "May need psychiatric stabilization first"
+
+    medical_hospital_need:
+      - medical emergency
+      - severe withdrawal
+      - seizure risk
+      - cardiac symptoms
+    message: "May need medical hospitalization first"
+
+  # Resource concerns
+  resource_warnings:
+    no_insurance_no_funds:
+      message: "No payment source - may need state hospital or scholarship"
+    transportation_barrier:
+      message: "Transportation needed - coordinate with family or transport service"
+    childcare_barrier:
+      message: "Childcare concern - female program may be better fit"
+
+# ACTION RECOMMENDATIONS
+action_recommendations:
+  crisis:
+    - "IMMEDIATE clinical assessment required"
+    - "Contact crisis clinician NOW"
+    - "If suicidal: National Suicide Prevention Lifeline 988"
+    - "If medical emergency: Call 911"
+    - "Document all interventions"
+
+  hot:
+    - "Schedule clinical assessment within 24 hours"
+    - "Verify insurance coverage today"
+    - "Coordinate bed assignment"
+    - "Prepare admission paperwork"
+    - "Daily follow-up until admission"
+    - "Goal: Admission within 48 hours"
+
+  warm:
+    - "Send insurance verification inquiry"
+    - "Provide educational materials about program"
+    - "Schedule clinical pre-assessment (phone)"
+    - "Follow-up in 3 business days"
+    - "Assess barriers to admission"
+    - "Re-qualify after insurance verification"
+
+  cold:
+    - "Add to educational email sequence"
+    - "Monthly check-in call"
+    - "Offer family consultation"
+    - "Provide crisis resources"
+    - "Re-evaluate readiness in 30 days"
+
+  not_ready:
+    - "Provide referral to appropriate level of care"
+    - "Share crisis resources (988, local crisis center)"
+    - "Offer family support resources"
+    - "Document reason for referral elsewhere"
+    - "Keep file open for future contact"
+
+# CUSTOM FIELDS - Team Recovery Specific
+custom_fields:
+  # Clinical
+  substance_primary: true
+  substance_secondary: true
+  previous_treatment_count: true
+  longest_sobriety_period: true
+  mental_health_diagnosis: true
+
+  # Insurance
+  insurance_provider: true
+  insurance_verified_date: true
+  estimated_coverage_days: true
+  authorization_number: true
+
+  # Legal
+  court_ordered: true
+  probation_officer: true
+  court_deadline: true
+
+  # Family
+  family_contact_name: true
+  family_contact_relationship: true
+  family_involvement_level: true
+
+# REPORTING
+reporting:
+  daily_metrics:
+    - total_inquiries
+    - crisis_count
+    - hot_count
+    - warm_count
+    - cold_count
+    - conversion_rate
+
+  weekly_metrics:
+    - average_coherence_score
+    - insurance_verification_rate
+    - time_to_admission_hot
+    - time_to_admission_warm
+
+  monthly_metrics:
+    - overall_conversion_rate
+    - revenue_per_admission
+    - graveyard_learnings
+    - trial_progress
+
+# COMPLIANCE
+compliance:
+  hipaa_required: true
+  data_encryption: required
+  access_control: admissions_team_only
+  audit_logging: true
+  retention_policy: "7 years per HIPAA"
+
+# INTEGRATION
+integration:
+  crm_system: null  # To be configured
+  ehr_system: null  # To be configured
+  insurance_verification_api: null  # To be configured
+
+# METADATA
+metadata:
+  facility_name: "Team Recovery"
+  location: "Draper, Utah"
+  license_number: "[Your License #]"
+  contact_phone: "[Your Phone]"
+  crisis_line: "988"
+  backup_crisis: "[Your Crisis Line]"
